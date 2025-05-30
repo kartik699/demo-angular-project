@@ -1,7 +1,15 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { ControlComponent } from '../../../shared/control/control.component';
 import { FormsModule } from '@angular/forms';
+import { Ticket } from '../ticket.model';
 
 @Component({
   selector: 'app-new-ticket',
@@ -12,6 +20,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class NewTicketComponent implements AfterViewInit {
   @ViewChild('form') private form?: ElementRef<HTMLFormElement>;
+  @Output() add = new EventEmitter<Pick<Ticket, 'request' | 'title'>>();
 
   ngAfterViewInit(): void {
     console.log('after view init called');
@@ -19,9 +28,8 @@ export class NewTicketComponent implements AfterViewInit {
   }
 
   onSubmit(title: string, ticketText: string) {
-    console.log(title);
-    console.log(ticketText);
-
     this.form?.nativeElement.reset();
+
+    this.add.emit({ title, request: ticketText });
   }
 }
