@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -18,18 +19,27 @@ import { Ticket } from '../ticket.model';
   templateUrl: './new-ticket.component.html',
   styleUrl: './new-ticket.component.css',
 })
-export class NewTicketComponent implements AfterViewInit {
+export class NewTicketComponent implements AfterViewInit, OnInit {
   @ViewChild('form') private form?: ElementRef<HTMLFormElement>;
   @Output() add = new EventEmitter<Pick<Ticket, 'request' | 'title'>>();
+
+  enteredTitle = '';
+  enteredText = '';
+
+  ngOnInit(): void {
+    console.log('On Init');
+    console.log(this.form?.nativeElement);
+  }
 
   ngAfterViewInit(): void {
     console.log('after view init called');
     console.log(this.form?.nativeElement);
   }
 
-  onSubmit(title: string, ticketText: string) {
-    this.form?.nativeElement.reset();
-
-    this.add.emit({ title, request: ticketText });
+  onSubmit() {
+    this.add.emit({ title: this.enteredTitle, request: this.enteredText });
+    // this.form?.nativeElement.reset();
+    this.enteredText = '';
+    this.enteredTitle = '';
   }
 }
